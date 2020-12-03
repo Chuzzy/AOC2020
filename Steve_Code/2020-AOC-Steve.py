@@ -205,6 +205,10 @@ def count_trees(slope_x, slope_y):
         x += slope_x
         y += slope_y
     return trees
+
+
+
 print(count_trees(3, 1))
 
-
+print( count_trees(1, 1) * count_trees(3, 1) * count_trees(5, 1)
+    * count_trees(7, 1) * count_trees(1, 2))
