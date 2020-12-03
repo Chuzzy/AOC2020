@@ -85,6 +85,10 @@ for x, i in enumerate(alist, 0):
 
 # ## Part 1 clean
 
+fname = "q1.txt"
+file = raw / fname
+f = open(file, "r")
+
 qlist = list(map(int, (x.strip() for x in f.readlines())))
 
 for x in combinations(qlist, 2):
@@ -187,6 +191,20 @@ fname = "q3.txt"
 file = raw / fname
 f = open(file, "r")
 
- ls = [x.strip() for x in f.readlines()]
+# ## Part 1
 
-# ls
+treeI = [x.strip() for x in f.readlines()]
+
+
+def count_trees(slope_x, slope_y):
+    x = 0
+    y = 0
+    trees = 0
+    while y < len(treeI):
+        trees += treeI[y][x % len(treeI[0])] == '#'
+        x += slope_x
+        y += slope_y
+    return trees
+print(count_trees(3, 1))
+
+
