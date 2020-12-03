@@ -15,7 +15,7 @@ readFile("03/input.txt", (err, data) => {
     }
     console.log(simulateSlope(3, 1) + " trees encountered on the way down when going right 3 down 1.");
 
-    const slopes = [simulateSlope(1, 1,), simulateSlope(3, 1), simulateSlope(5, 1), simulateSlope(7, 1), simulateSlope(1, 2)];
+    const slopes = [simulateSlope(1, 1), simulateSlope(3, 1), simulateSlope(5, 1), simulateSlope(7, 1), simulateSlope(1, 2)];
     console.log("The different number of trees encountered are " + slopes);
     console.log("The product is " + slopes.reduce((total, n) => total * n, 1));
 });
