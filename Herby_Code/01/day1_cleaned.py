@@ -1,4 +1,4 @@
-inp = {int(l) for l in open('input1.txt', 'r').readlines()}
+inp = [int(l) for l in open('input1.txt', 'r').readlines()]
 
 """
 def sum2(n):
