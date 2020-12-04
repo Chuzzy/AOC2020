@@ -278,6 +278,10 @@ def is_valid(passport):
 print(sum(map(is_valid, passports)))
 
 
+# -
+
+# ## Part 2
+
 # +
 def is_valid(passport):
     # Abuse exceptions for control flow
