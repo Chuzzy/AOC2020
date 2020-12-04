@@ -28,3 +28,4 @@ slopes = [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
 
 print('Silver:', part1(inp, 3, 1))
 print('Gold:', prod(part1(inp, *xs) for xs in slopes))
+print('Gold:', list(part1(inp, *xs) for xs in slopes))
