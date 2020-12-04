@@ -3,42 +3,46 @@ readFile("04/input.txt", (err, data) => {
     if (err) throw err;
 
     const input = data.toString().split("\r\n\r\n").map(s => s.replace(/\r\n/g, " "));
-    let validPassportCount = 0;
-    let validDataCount = 0;
-
-    for (const passport of input) {
-        if (["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"].every(field => passport.includes(field))) {
-            validPassportCount++;
-
-            const birthYear = parseInt(passport.match(/byr:(\d+)/)[1]);
-            if (1920 <= birthYear && birthYear <= 2002) {
-                const issueYear = parseInt(passport.match(/iyr:(\d+)/)[1]);
-                if (2010 <= issueYear && issueYear <= 2020) {
-                    const expYear = parseInt(passport.match(/eyr:(\d+)/)[1]);
-                    if (2020 <= expYear && expYear <= 2030) {
-                        const heightMatch = passport.match(/hgt:(\d+)(cm|in)/);
-                        if (heightMatch) {
-                            const height = parseInt(heightMatch[1])
-                            if ((heightMatch[2] == "cm" && 150 <= height && height <= 193) || (59 <= height && height <= 76)) {
-                                if (passport.match(/hcl:#[\da-f]{6}/)) { // Hair color
-                                    if (passport.match(/ecl:(?:amb|blu|brn|gry|grn|hzl|oth)/)) { // Eye color
-                                        const passportIdMatch = passport.match(/pid:(\d+)/);
-                                        if (passportIdMatch) {
-                                            if (passportIdMatch[1].match(/^[\d]{9}$/)) {
-                                                validDataCount++;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-        }
+    const hasRequiredFields = (passportStr) => {
+        return ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"].every(field => passportStr.includes(field));
     }
 
-    console.log(`There are ${validPassportCount} valid passports.`);
-    console.log(`Of these, there are ${validDataCount} passports with valid data.`);
+    const passportToObj = (passportStr) => {
+        const obj = {};
+        for (const pair of passportStr.matchAll(/(?<field>\w+):(?<val>\S+)/g)) {
+            obj[pair.groups.field] = pair.groups.val;
+        }
+        return obj;
+    }
+
+    const numInRange = (x, min, max) => {
+        x = x.toString();
+        if (x.match(/^(\d+)$/)) {
+            const num = parseInt(x);
+            return min <= num && num <= max;
+        }
+        return false;
+    }
+
+    const isValidHeight = (heightStr) => {
+        if (heightStr.match(/^(\d+)(cm|in)$/)) {
+            return heightStr.endsWith("cm") ?
+                numInRange(parseInt(heightStr), 150, 193) :
+                numInRange(parseInt(heightStr), 59, 76);
+        }
+        return false;
+    }
+
+    const hasValidFields = (passportObj) => {
+        return numInRange(passportObj.byr, 1920, 2020) &&
+            numInRange(passportObj.iyr, 2010, 2020) &&
+            numInRange(passportObj.eyr, 2020, 2030) &&
+            isValidHeight(passportObj.hgt) &&
+            passportObj.hcl.match(/^#[\da-f]{6}$/) &&
+            passportObj.ecl.match(/^(?:amb|blu|brn|gry|grn|hzl|oth)$/) &&
+            passportObj.pid.match(/^[\d]{9}$/);
+    }
+
+    console.log(`There are ${input.filter(hasRequiredFields).length} valid passports.`);
+    console.log(`Of these, there are ${input.filter(hasRequiredFields).map(passportToObj).filter(hasValidFields).length} passports with valid data.`);
 });
