@@ -1,5 +1,4 @@
 import { readFile } from "fs";
-import { parse } from "path";
 readFile("04/input.txt", (err, data) => {
     if (err) throw err;
 
