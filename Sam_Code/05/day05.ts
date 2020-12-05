@@ -35,9 +35,9 @@ readFile("05/input.txt", (err, data) => {
 
     const mySeatIndex = seats.findIndex((id, i) => {
         return id >= 8 && id <= 8 * 128 && seats[i + 1] !== id + 1;
-    });
+    }) + 1;
 
     console.log(`The maximum is ${Math.max(...seats)}`);
-    console.log(`My seat ID is ${seats[mySeatIndex] + 1}`);
+    console.log(`My seat ID is ${seats[mySeatIndex]}`);
     
 });
