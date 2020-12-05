@@ -12,6 +12,7 @@ hgt:179cm
 hcl:#cfa07d eyr:2025 pid:166559648
 iyr:2011 ecl:brn hgt:59in""".split('\n\n'))]
 
+
 def valid_passport(passport):
     byr = len(passport['byr']) == 4 and 1920 <= int(passport['byr']) <= 2002
     iyr = len(passport['iyr']) == 4 and 2010 <= int(passport['iyr']) <= 2020
@@ -28,7 +29,6 @@ def valid_passport(passport):
 
     #print(byr, iyr, eyr, hgt, hcl, ecl, pid)
     return byr and iyr and eyr and hgt and hcl and ecl and pid
-
     
 
 inp = [*map(lambda x: x.split(), open('input4.txt', 'r').read().split('\n\n'))]
@@ -42,8 +42,6 @@ for passport in inp:
     if required.intersection(cleaned.keys()) == required:
         part1 += 1
         part2 += valid_passport(cleaned)
-
-    #valid = 
 
 print('Silver:', part1)
 print('Gold:', part2)
