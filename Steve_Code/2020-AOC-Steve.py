@@ -388,3 +388,42 @@ def find_missing(lst):
     end = lst[-1] 
     return sorted(set(range(start, end + 1)).difference(lst))
 print(*find_missing(allids)) 
+
+# ## DAY 7 QUICK TO GET 3 STARS
+
+!{sys.executable} -m pip install networkx
+
+import networkx as nx
+
+
+fname = "q7.txt"
+file = raw / fname
+f = open(file, "r")
+
+data = [x.strip().split() for x in f.readlines()]
+
+rules = {}
+for w in data:
+    parent = w[0] + w[1]
+    i = 4
+    contains = []
+    while i < len(w) and w[i] != 'no':
+        count = int(w[i])
+        child = w[i+1] + w[i+2]
+        contains.append((count, child))
+        i += 4
+    rules[parent] = contains
+
+G = nx.DiGraph()
+for colour, contains in rules.items():
+    for x, child in contains:
+        G.add_edge(child, colour)
+print(len(nx.predecessor(G, 'shinygold')) - 1)
+
+
+# +
+def num_bags(colour):
+    return 1 + sum(count * num_bags(child) for count, child in rules[colour])
+
+
+print(num_bags('shinygold') - 1)
