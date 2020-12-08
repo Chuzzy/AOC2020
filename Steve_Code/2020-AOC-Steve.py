@@ -387,7 +387,7 @@ def find_missing(lst):
     start = lst[0] 
     end = lst[-1] 
     return sorted(set(range(start, end + 1)).difference(lst))
-print(*find_missing(allids)) 
+print(*find_missing(all_ids)) 
 
 # ### Day 6
 
