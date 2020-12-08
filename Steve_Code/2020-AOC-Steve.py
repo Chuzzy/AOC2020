@@ -389,8 +389,39 @@ def find_missing(lst):
     return sorted(set(range(start, end + 1)).difference(lst))
 print(*find_missing(allids)) 
 
-# ## DAY 7 QUICK TO GET 3 STARS
+# ## DAY 7
 
+# ue to recent aviation regulations, many rules (your puzzle input) are being enforced about bags and their contents; bags must be color-coded and must contain specific quantities of other color-coded bags. Apparently, nobody responsible for these regulations considered how long they would take to enforce!
+#
+# For example, consider the following rules:
+# ```
+# light red bags contain 1 bright white bag, 2 muted yellow bags.
+# dark orange bags contain 3 bright white bags, 4 muted yellow bags.
+# bright white bags contain 1 shiny gold bag.
+# muted yellow bags contain 2 shiny gold bags, 9 faded blue bags.
+# shiny gold bags contain 1 dark olive bag, 2 vibrant plum bags.
+# dark olive bags contain 3 faded blue bags, 4 dotted black bags.
+# vibrant plum bags contain 5 faded blue bags, 6 dotted black bags.
+# faded blue bags contain no other bags.
+# dotted black bags contain no other bags.
+# ```
+# These rules specify the required contents for 9 bag types. In this example, every faded blue bag is empty, every vibrant plum bag contains 11 bags (5 faded blue and 6 dotted black), and so on.
+#
+# You have a shiny gold bag. If you wanted to carry it in at least one other bag, how many different bag colors would be valid for the outermost bag? (In other words: how many colors can, eventually, contain at least one shiny gold bag?)
+#
+# In the above rules, the following options would be available to you:
+#
+# A bright white bag, which can hold your shiny gold bag directly.
+# A muted yellow bag, which can hold your shiny gold bag directly, plus some other bags.
+# A dark orange bag, which can hold bright white and muted yellow bags, either of which could then hold your shiny gold bag.
+# A light red bag, which can hold bright white and muted yellow bags, either of which could then hold your shiny gold bag.
+# So, in this example, the number of bag colors that can eventually contain at least one shiny gold bag is 4.
+#
+# How many bag colors can eventually contain at least one shiny gold bag? (The list of rules is quite long; make sure you get all of it.)
+
+# ### Import/File read
+
+# jupyter inline pip install because I was lazy and forgot to make a new conda env f
 !{sys.executable} -m pip install networkx
 
 import networkx as nx
@@ -399,6 +430,8 @@ import networkx as nx
 fname = "q7.txt"
 file = raw / fname
 f = open(file, "r")
+
+# ### Part 1
 
 data = [x.strip().split() for x in f.readlines()]
 
@@ -421,9 +454,90 @@ for colour, contains in rules.items():
 print(len(nx.predecessor(G, 'shinygold')) - 1)
 
 
+# ### Part 2
+
 # +
 def num_bags(colour):
     return 1 + sum(count * num_bags(child) for count, child in rules[colour])
 
 
 print(num_bags('shinygold') - 1)
+# -
+
+# ## Q8
+
+# Their handheld game console won't turn on! They ask if you can take a look.
+#
+# You narrow the problem down to a strange infinite loop in the boot code (your puzzle input) of the device. You should be able to fix it, but first you need to be able to run the code in isolation.
+#
+# The boot code is represented as a text file with one instruction per line of text. Each instruction consists of an operation (acc, jmp, or nop) and an argument (a signed number like +4 or -20).
+#
+# acc increases or decreases a single global value called the accumulator by the value given in the argument. For example, acc +7 would increase the accumulator by 7. The accumulator starts at 0. After an acc instruction, the instruction immediately below it is executed next.
+# jmp jumps to a new instruction relative to itself. The next instruction to execute is found using the argument as an offset from the jmp instruction; for example, jmp +2 would skip the next instruction, jmp +1 would continue to the instruction immediately below it, and jmp -20 would cause the instruction 20 lines above to be executed next.
+# nop stands for No OPeration - it does nothing. The instruction immediately below it is executed next.
+# For example, consider the following program:
+# ```
+# nop +0
+# acc +1
+# jmp +4
+# acc +3
+# jmp -3
+# acc -99
+# acc +1
+# jmp -4
+# acc +6
+# ```
+# These instructions are visited in this order:
+# ```
+# nop +0  | 1
+# acc +1  | 2, 8(!)
+# jmp +4  | 3
+# acc +3  | 6
+# jmp -3  | 7
+# acc -99 |
+# acc +1  | 4
+# jmp -4  | 5
+# acc +6  |
+# ```
+# First, the nop +0 does nothing. Then, the accumulator is increased from 0 to 1 (acc +1) and jmp +4 sets the next instruction to the other acc +1 near the bottom. After it increases the accumulator from 1 to 2, jmp -4 executes, setting the next instruction to the only acc +3. It sets the accumulator to 5, and jmp -3 causes the program to continue back at the first acc +1.
+#
+# This is an infinite loop: with this sequence of jumps, the program will run forever. The moment the program tries to run any instruction a second time, you know it will never terminate.
+#
+# Immediately before the program would run an instruction a second time, the value in the accumulator is 5.
+#
+# Run your copy of the boot code. Immediately before any instruction is executed a second time, what value is in the accumulator?
+
+# ### File read
+
+fname = "q8.txt"
+file = raw / fname
+f = open(file, "r")
+
+# ### Part 1
+
+ws = [line.strip().split() for line in f.readlines()]
+
+instructions = [w[0] for w in ws]
+values = [int(w[1]) for w in ws]
+
+
+def run(insts, values):
+    i = 0
+    seen = set()
+    acc = 0
+    while True:
+        if i in seen:
+            return (False, acc)
+        seen.add(i)
+        inst = insts[i]
+        value = values[i]
+        if inst == 'acc':
+            acc += value
+        if inst == 'jmp':
+            i += value
+        else:
+            i += 1
+
+
+x, acc = run(instructions, values)
+print(acc)
