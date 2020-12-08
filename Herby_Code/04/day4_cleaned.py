@@ -10,7 +10,8 @@ def valid_passport(psp):
         or psp['hgt'][-2:] == 'in' and 59 <= int(psp['hgt'][:-2]) <= 76
 
     hcl = fullmatch(r'#[a-z0-9]{6}', psp['hcl']) != None
-    ecl = psp['ecl'] in {"amb", "blu", "brn", "gry", "grn", "hzl", "oth"}
+    #ecl = psp['ecl'] in {"amb", "blu", "brn", "gry", "grn", "hzl", "oth"}
+    ecl = fullmatch('amb|blu|brn|gry|grn|hzl|oth', psp['ecl'])
     pid = fullmatch(r'[0-9]{9}', psp['pid']) != None
 
     return byr and iyr and eyr and hgt and hcl and ecl and pid
