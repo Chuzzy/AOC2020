@@ -8,7 +8,7 @@ readFile("02/input.txt", (err, data) => {
     for (const match of data.toString().matchAll(re)) {
         const min = parseInt(match.groups.min);
         const max = parseInt(match.groups.max);
-        const count = [...match.groups.password.matchAll(match.groups.char)].length;
+        const count = [...match.groups.password.matchAll(new RegExp(match.groups.char, "g"))].length;
         const password = match.groups.password;
         const char = match.groups.char;
 
@@ -16,7 +16,7 @@ readFile("02/input.txt", (err, data) => {
         if (min <= count && count <= max) oldPwPolicyValidCount++;
 
         // New password policy
-        if (password[min - 1] == char ^ password[max - 1] == char) newPwPolicyValidCount++;
+        if ((password[min - 1] == char) !== (password[max - 1] == char)) newPwPolicyValidCount++;
     }
 
     console.log(oldPwPolicyValidCount + " valid passwords according to the password policy rules from the shopkeeper's old job at the sled rental place down the street.");
