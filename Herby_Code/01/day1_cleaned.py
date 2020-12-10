@@ -23,6 +23,7 @@ def sum_n(xs, n):
 
 print(sum_n(inp, 2))
 print(sum_n(inp, 3))
+print(sum_n([1010, 2019, 1], 2))
 
 """
 part1 = True
