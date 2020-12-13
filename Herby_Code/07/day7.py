@@ -32,10 +32,15 @@ def count_inside(bag, cont):
 
     return 1 + sum(j * count_inside(b, cont) for j, b in cont[bag])
 
+from time import time
+
 gold_count = 0
+now = time()
 
 for outer, inner in bags.items():
     gold_count += contains_gold(outer, bags)
 
+
 print('Part 1:', gold_count)
+print(time() - now)
 print('Part 2:', count_inside('shiny gold', bags) - 1)
