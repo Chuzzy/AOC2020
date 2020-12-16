@@ -1,5 +1,4 @@
 import { readFile } from "fs";
-import { stringify } from "querystring";
 
 readFile("07/input.txt", (err, data) => {
     if (err) throw err;
@@ -8,33 +7,25 @@ readFile("07/input.txt", (err, data) => {
     const re = /^(?<bigbag>.+) bags contain (?<smallbags>(?:\d+ .+ bags?[,.]){1,}|no other bags\.)$/;
     const smallBagsRe = /(?<count>\d+) (?<color>\D+) bags?/g;
 
-    interface DirectedEdge {
-        from: string;
-        to: string;
-    }
-
-    const tree: DirectedEdge[] = [];
-    const sameEdge = (e1: DirectedEdge, e2: DirectedEdge): boolean => e1.from === e2.from && e1.to === e2.to;
+    const bags = [];
 
     for (const line of input) {
         const match = re.exec(line);
         const bigbag = match.groups.bigbag;
-        for (const smallbag of match.groups.smallbags.matchAll(smallBagsRe)) {
-            const newEdge: DirectedEdge = {from: bigbag, to: smallbag.groups.color};
-            if (tree.findIndex(edge => sameEdge(edge, newEdge)) === -1) {
-                tree.push(newEdge);
+        if (match.groups.smallbags == "no other bags") {
+            /*
+            const newBag: Baggage = { bag: bigbag, contains: null };
+            bags.push(newBag);
+            */
+        } else {
+            for (const smallbag of match.groups.smallbags.matchAll(smallBagsRe)) {
+                // const newBag: Baggage = { bag: bigbag, contains: smallbag.groups.color, count: parseInt(smallbag.groups.count) };
+                bags.push([bigbag, smallbag.groups.color]);
             }
         }
     }
 
+    const numberOfBagsWithShinyGold = -1 // bags.filter(bag => dfs(bags, bag[0]).includes("shiny gold"));
+    console.log(`The number of bags that contain shiny gold bags are ${numberOfBagsWithShinyGold}`);
 
-    const dfs = (node: DirectedEdge) => {
-        if (node.to === "shiny gold") {
-            return true;
-        }
-        return dfs(tree[tree.findIndex(edge => edge.from === node.to)]);
-    }
-
-    console.log(dfs(tree[0]));
-    
 });
