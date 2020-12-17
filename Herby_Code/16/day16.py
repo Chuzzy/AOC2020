@@ -40,7 +40,7 @@ for ticket in other_tickets:
         if not any(valid(field, rl) for rl in rules.values()):
             part1 += field
 
-print(part1)
+print('Silver:', part1)
 
 valid_ticket = lambda ticket: all(any(valid(field, rl) for rl in rules.values()) for field in ticket)
 
@@ -63,9 +63,9 @@ while any(f == None for f in finals):
             
             finals[i] = possibilities[i].pop()
 
-print(finals)
+#print(finals)
 
 from math import prod
-print(prod(f for i, f in enumerate(your_ticket) if finals[i][:len('departure')] == 'departure'))
+print('Gold:', prod(f for i, f in enumerate(your_ticket) if finals[i][:len('departure')] == 'departure'))
 
-print([(f, finals[i]) for i, f in enumerate(your_ticket)])
+#print([(f, finals[i]) for i, f in enumerate(your_ticket)])
