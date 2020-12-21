@@ -1,5 +1,5 @@
 import { readFile } from "fs";
-import { start } from "repl";
+
 readFile("11/input.txt", (err, data) => {
     if (err) throw err;
 
