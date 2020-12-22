@@ -29,7 +29,7 @@ readFile("11/input.txt", (err, data) => {
     };
 
     const cellContents = (cells: string[][], coords: [number, number]): string =>
-        cells[coords[0]][coords[1]];
+        cells[coords[1]][coords[0]];
 
     const tick = (cells: string[][]): string[][] => {
         const result: string[][] = [];
