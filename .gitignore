@@ -2,3 +2,4 @@
 Sam_Code/node_modules
 Sam_Code/*/*.js
 Sam_Code/*/*.js.map
+Sam_Code/tsconfig.tsbuildinfo
