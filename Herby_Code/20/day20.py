@@ -52,6 +52,14 @@ def match_edge_tile(e, tile):
     
     return None
 
+def match_edge_tile_2(e, tile):
+    for r in range(4):
+        if e == edge(tile, r): return (r, False)
+        elif e == edge(flip(tile), r): return (r, True)
+    
+    return None
+
+
 def dir(xy, r):
     if r == 0:
         return (xy[0], xy[1] + 1)
@@ -122,6 +130,7 @@ edges = {}
 for id1, tile1 in tiles.items():
     for id2, tile2 in tiles.items():
         if id1 == id2: continue
+
         for i in range(4):
             for j in range(4):
                 mi, ma = min(id1, id2), max(id1, id2)
@@ -130,40 +139,52 @@ for id1, tile1 in tiles.items():
                 if edge(tile1, i) == edge(flip(tile2), j):
                     edges[(mi, ma)] = (i, j, True)
 
+print('edge len', len(edges))
+
+exit()
+
 """
 for k, v in edges.items():
     print(f'{k} - {v}')
 """
 
-grid = {(0, 0): (corners[0], False)}
+grid = {(0, 0): corners[1]}
 
 added = set(tiles.keys())
-added.remove(corners[0])
+added.remove(grid[(0, 0)])
+
+#from math import sqrt
+#print(sqrt(len(tiles)))
 
 while len(added) > 0:
-    update = None
-    #found = False
-    for coord, t in grid.items():
-        id1, flipped1 = t
+    update = {}
+
+    for coord, id1 in grid.items():
+
         for _, dxy in combos:
             xy = (coord[0] + dxy[0], coord[1] + dxy[1])
-            if (0 <= xy[0] <= 2) and (0 <= xy[1] <= 2) and (xy not in grid.keys()):
+            if (0 <= xy[0] <= 11) and (0 <= xy[1] <= 11) and (xy not in grid.keys()):
                 for id2 in added:
                     #print(id1, id2)
                     mi, ma = min(id1, id2), max(id1, id2)
 
                     if (mi, ma) in edges.keys():
-                        
-                        i2, j2, flipped2 = edges[(mi, ma)]
 
-                        r = 0
-
-                        update = (xy, (id2, flipped1 != flipped2))
+                        update[xy] = id2
                         added.remove(id2)
                         break
-            if update != None: break
-        if update != None: break
-    
-    grid[update[0]] = update[1]
 
-print(grid)
+            if update != {}: break
+        if update != {}: break
+    
+    for k, v in update.items():
+        grid[k] = v
+
+    print(len(grid))
+    if len(grid) == 142:
+        print(sorted(grid))
+
+print(sorted(grid.keys()))
+for y in range(12):
+    #for x in range(3):
+    print(*[grid[(y, x)][0] for x in range(12)])
