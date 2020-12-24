@@ -26,17 +26,11 @@ def part2(p1, p2):
         c1, c2 = p1.pop(0), p2.pop(0)
 
         if c1 > len(p1) or c2 > len(p2):
-            if c1 > c2:
-                p1 += [c1, c2]
-            else:
-                p2 += [c2, c1]
+            [p2, p1][c1 > c2] += [[c2, c1], [c1, c2]][c1 > c2]
         else:
             w, _ = part2(p1[:c1], p2[:c2])
 
-            if w:
-                p1 += [c1, c2]
-            else:
-                p2 += [c2, c1]
+            [p2, p1][w] += [[c2, c1], [c1, c2]][w]
 
     return p1 > p2, max(p1, p2)
 
