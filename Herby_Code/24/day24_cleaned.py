@@ -55,8 +55,11 @@ for line in inp:
         tiles.remove(point)
     else:
         tiles.add(point)
-    
+
 print('Silver:', len(tiles))
+
+print(time() - now)
+now = time()
 
 adjacent = lambda tile: [add(tile, d) for d in dirs_vals]
 
